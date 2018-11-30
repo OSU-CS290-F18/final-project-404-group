@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
-var mongodb = require('mongodb')
-
+const mongodb = require('mongodb')
+const fs = require('fs')
 const mongodb_url = 'mongodb://mymongo:27017/animals'
 
 var MongoClient = mongodb.MongoClient
@@ -43,7 +43,9 @@ app.get('/find', function(req, res){
 })
 
 app.get('/', function(req, res) {
-    res.send("test")
+    fs.readFile("./index.html", function(err, data){
+        res.send(data.toString())
+    })
 })
 
 app.listen(8888, () => console.log('Example app listening on port 3000!'))

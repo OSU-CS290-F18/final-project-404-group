@@ -18,6 +18,7 @@
   "homepage": "https://github.com/EmmaLi1/CS_290_Final_Project#readme",
   "dependencies": {
     "express": "^4.16.4",
+    "fs": "0.0.1-security",
     "mongodb": "^3.1.10"
   }
 }
