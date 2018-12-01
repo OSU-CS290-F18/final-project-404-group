@@ -129,6 +129,39 @@ app.post('/get_post_list', function(req, res) {
     })
 })
 
+app.post('/get_commit_list', function(req, res) {
+    res.append('Content-Type', 'application/json')
+    MongoClient.connect(mongodb_url, function (err, client) {
+        if (err) {
+            console.log(err)
+            res.send(JSON.stringify({
+                code : -1,
+                err_msg : 'connect fails'
+            }))
+        } else {
+            var db = client.db('animals')
+            db.collection('commit').find({
+                post_id: req.body.post_id
+            }).sort([
+                ['update_time', -1]
+            ]).toArray(function (err, result) {
+                if(err) {
+                    res.send(JSON.stringify({
+                        code: -1,
+                        err_msg: 'find data fail'
+                    }))
+                } else {
+                    res.send(JSON.stringify({
+                        code: 0,
+                        data: result
+                    }))
+                }
+                client.close()
+            })
+        }
+    })
+})
+
 app.get('/get_group_list', function(req, res) {
     res.append('Content-Type', 'application/json')
     MongoClient.connect(mongodb_url, function (err, client) {

@@ -1,3 +1,7 @@
+function get_mk(data){
+    console.log(data);
+    return marked((new Base64).decode(data))
+}
 $(function(){
 
 var vueData = {
@@ -95,7 +99,7 @@ Vue.component('group-comp', {
             __this = this;
             $.post('./add_post', {
                 title: this.$data.input_title,
-                content: this.$data.input_content,
+                content: (new Base64).encode(this.$data.input_content),
                 author: this.$data.input_author,
                 group_id: vueData.now_group._id
             }, function(res) {
@@ -158,7 +162,7 @@ Vue.component('post-comp', {
             __this = this;
             $.post('./add_commit', {
                 author: __this.$data.input_author,
-                content: __this.$data.input_content,
+                content: (new Base64).encode(__this.$data.input_content),
                 post_id: __this.$data.now_post._id,
                 group_id: __this.$data.now_group._id
             }, function(res) {
@@ -180,7 +184,17 @@ Vue.component('post-comp', {
     },
     mounted: function() {
         this.$data.now_post = vueData.now_post;
-        this.$data.now_group = vueData.now_group
+        this.$data.now_group = vueData.now_group;
+        __this = this;
+        $.post("./get_commit_list", {
+            post_id: vueData.now_post._id
+        }, function(res) {
+            if(res['code'] == 0) {
+                __this.$data.commit_list = __this.$data.commit_list.concat(res['data'])
+            } else {
+                alert(res['err_msg'])
+            }
+        })
     }
 });
 
