@@ -13,6 +13,17 @@
     <script src="https://cdn.staticfile.org/marked/0.5.1/marked.min.js"></script>
     <link rel="stylesheet" href="main.css" />
     <script src="main.js"></script>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$']],
+            displayMath: [ ['$$','$$']]
+        }
+    });
+    </script>
+    <script type="text/javascript" async src="https://cdn.staticfile.org/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
 </head>
 <body>
     <div class="container" id="mainView">
@@ -189,7 +200,7 @@
                 <div class="card-body">
                     <h4 class="card-title">{{now_post.title}}</h4>
                     <div>
-                        <p class="card-text" v-html="get_mk(now_post.content)"></p>
+                        <p class="card-text" name="mayMath" v-html="get_mk(now_post.content)"></p>
                     </div>
                     <div class="float-right">
                         <p class="card-text">Author: {{now_post.author}}</p>
@@ -207,7 +218,7 @@
                             <span class="float-left">Author: {{item.author}}</span>
                             <span class="float-right">On {{(new Date(item.create_time)).toLocaleDateString()}}</span>
                         </div>
-                        <div class="card-body" v-html="get_mk(item.content)">
+                        <div class="card-body" name="mayMath" v-html="get_mk(item.content)">
                             
                         </div>
                     </div>

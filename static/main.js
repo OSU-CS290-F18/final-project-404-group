@@ -107,7 +107,7 @@ Vue.component('group-comp', {
                     __this.$data.post_list.unshift({
                         title: __this.$data.input_title,
                         author: __this.$data.input_author,
-                        content: __this.$data.input_content,
+                        content: (new Base64).encode(this.$data.input_content),
                         commit_number: 0,
                         group_id: vueData.now_group._id,
                         update_time: Date.now(),
@@ -170,7 +170,7 @@ Vue.component('post-comp', {
                     __this.$data.commit_list.unshift({
                         _id: res['data'],
                         author:  __this.$data.input_author,
-                        content: __this.$data.input_content,
+                        content: (new Base64).encode(__this.$data.input_content),
                         group_id: __this.$data.now_group._id,
                         post_id: __this.$data.now_post._id,
                         update_time: Date.now(),
@@ -194,6 +194,13 @@ Vue.component('post-comp', {
             } else {
                 alert(res['err_msg'])
             }
+        })
+    },
+    updated: function () {
+        var mathId = document.getElementsByName("mayMath");
+        mathId.forEach(function(value) {
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub,value]);
+            return value;
         })
     }
 });
