@@ -1,0 +1,8 @@
+.my-add {
+    position: fixed;
+    bottom: 100px;
+    right: 60px;
+    z-index: 99999;
+    height: 64px;
+    width: 64px;
+}
