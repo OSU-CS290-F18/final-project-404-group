@@ -4,7 +4,7 @@ const mongodb = require('mongodb')
 const fs = require('fs')
 const mongodb_url = 'mongodb://mymongo:27017/animals'
 const bodyParser = require('body-parser')
-
+const ObjectID = mongodb.ObjectID
 
 var MongoClient = mongodb.MongoClient
 
@@ -50,7 +50,7 @@ app.post('/add_post', function(req, res) {
     res.append('Content-Type', 'application/json')
     MongoClient.connect(mongodb_url, function(err, client) {
         if(err) {
-            console.log(err)
+            
             res.send(JSON.stringify({
                 'code' : -1,
                 'err_msg' : 'open database fail'
@@ -67,28 +67,31 @@ app.post('/add_post', function(req, res) {
                 create_time: Date.now()
             }, function(err, result){
                 if(err) {
+                    
                     res.send(JSON.stringify({
                         code: -1,
                         err_msg: 'insert data fail'
                     }))
                 } else {
-                    res.send(JSON.stringify({
-                        code: 0,
-                        data: result.insertedId
-                    }))
+                    
+                    db.collection('group').updateOne({
+                        "_id": new ObjectID(req.body.group_id)
+                    }, {
+                        $set: {
+                            update_time: Date.now()
+                        }
+                    }, function(err, update_res){
+                        console.log(update_res)
+                        
+                        res.send(JSON.stringify({
+                            code: 0,
+                            data: result.insertedId
+                        }))
+                        client.close()
+                    })
                     
                 }
             })
-            // db.collection('group').updateOne({
-            //     _id: req.body.group_id
-            // }, {
-            //     $set: {
-            //         update_time: Date.now()
-            //     }
-            // }, function(err, update_res){
-            //     console.log(update_res)
-            //     client.close()
-            // })
         }
     });
 })
@@ -186,6 +189,67 @@ app.post('/get_post_list_limit', function(req, res) {
             })
         }
     })
+})
+
+app.post('/add_commit', function(req, res) {
+    res.append('Content-Type', 'application/json')
+    MongoClient.connect(mongodb_url, function(err, client) {
+        if(err) {
+            console.log(err)
+            res.send(JSON.stringify({
+                'code' : -1,
+                'err_msg' : 'open database fail'
+            }))
+        } else {
+            var db = client.db("animals")
+            db.collection('commit').insertOne({
+                author: req.body.author,
+                content: req.body.content,
+                group_id: req.body.group_id,
+                post_id: req.body.post_id,
+                update_time: Date.now(),
+                create_time: Date.now()
+            }, function(err, result){
+                if(err) {
+                    res.send(JSON.stringify({
+                        code: -1,
+                        err_msg: 'insert data fail'
+                    }))
+
+                    
+                } else {
+                    db.collection('group').updateOne({
+                        _id: new ObjectID(req.body.group_id)
+                    }, {
+                        $set: {
+                            update_time: Date.now()
+                        }
+                    }, function(err, update_res){
+                        console.log(update_res)
+                        db.collection('post').updateOne({
+                            _id: new ObjectID(req.body.post_id)
+                        }, {
+                            $set: {
+                                update_time: Date.now()
+                            },
+                            $inc: {
+                                commit_number: 1
+                            }
+                        }, function(err, update_res){
+                            res.send(JSON.stringify({
+                                code: 0,
+                                data: result.insertedId
+                            }))
+                            console.log(update_res)
+                            client.close()
+                        })
+                    })
+                    
+                    
+                }
+            })
+        }
+    });
 })
 
 app.get('/add', function(req, res){

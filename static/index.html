@@ -78,7 +78,7 @@
                             <h4>{{item.topic}}</h4>
                         </div>
                         <div class="list-group list-group-flush">
-                            <button class="list-group-item text-left" v-for="(post_item, post_index) in item.post_list">{{post_item.title}}</button>
+                            <button class="list-group-item text-left" v-for="(post_item, post_index) in item.post_list" @click="get_into_post(index, post_index)">{{post_item.title}}</button>
                         </div>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
 
         <div class="row">
             <div class="list-group col-12" style="padding-right: 0px;">
-                <button class="list-group-item text-left" v-for="(item, index) in post_list">{{item.title}} <span class="badge badge-secondary">{{item.commit_number}}</span></button>
+                <button class="list-group-item text-left" v-for="(item, index) in post_list" @click="get_into_post(index)">{{item.title}} <span class="badge badge-secondary">{{item.commit_number}}</span></button>
             </div>
         </div>
         
@@ -146,25 +146,52 @@
 </template>
 
 <template id="post-temp">
-    <div class="d-none">
-        <button class="btn btn-dark rounded-circle my-add"><img src="./add.png" class="img-fluid" alt="" srcset=""></button>
+    <div>
+        <button class="btn btn-dark rounded-circle my-add" data-toggle="modal" data-target="#add-commit"><img src="./add.png" class="img-fluid" alt="" srcset=""></button>
+        <div class="modal fade" id="add-commit">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h4 class="modal-title">Commit</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="author">Author:</label>
+                            <input type="text" id="author" placeholder="Enter Author" class="form-control" v-model="input_author">
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Content:</label>
+                            <textarea name="" id="content" cols="30" rows="10" class="form-control" placeholder="Add Group content ...." v-model="input_content"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="add_commit" data-dismiss="modal"> Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <ol class="breadcrumb col-12">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Sport</a></li>
-                <li class="breadcrumb-item active">Note Note Note Note Note Note Note Note Note Note Note Note </li>
+                <li class="breadcrumb-item"><a href="#" @click="get_into_home">Home</a></li>
+                <li class="breadcrumb-item"><a href="#" @click="get_into_group">{{now_group.topic}}</a></li>
+                <li class="breadcrumb-item active">{{now_post.title}}</li>
             </ol>
         </div>
         <div class="row">
             <div class="card col-12">
                 <div class="card-body">
-                    <h4 class="card-title"> Note Note Note Note Note Note Note Note Note Note Note</h4>
+                    <h4 class="card-title">{{now_post.title}}</h4>
                     <div>
-                        <p class="card-text">Some example text. Some example text.</p>
+                        <p class="card-text">{{now_post.content}}</p>
                     </div>
                     <div class="float-right">
-                        <p class="card-text">Auther: fucker</p>
-                        <p class="card-text">Post at 2018/08/08</p>
+                        <p class="card-text">Author: {{now_post.author}}</p>
+                        <p class="card-text">Post at {{(new Date(now_post.create_time)).toLocaleDateString()}}</p>
                     </div>
                 </div>
             </div>

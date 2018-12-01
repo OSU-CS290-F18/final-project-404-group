@@ -43,6 +43,11 @@ Vue.component('main-comp', {
         get_into_group: function(id) {
             vueData.now_group = this.$data.group_list[id];
             vueMethods.switch_component("group-comp");
+        },
+        get_into_post: function(group_index, post_index) {
+            vueData.now_group = this.$data.group_list[group_index];
+            vueData.now_post = this.$data.group_list[group_index].post_list[post_index];
+            vueMethods.switch_component('post-comp');
         }
     },
     mounted: function() {
@@ -108,6 +113,10 @@ Vue.component('group-comp', {
                     alert(res['err_msg'])
                 }
             })
+        },
+        get_into_post: function(index) {
+            vueData.now_post = this.$data.post_list[index];
+            vueMethods.switch_component('post-comp');
         }
     },
     mounted: function() {
@@ -130,14 +139,48 @@ Vue.component('post-comp', {
     template: "#post-temp",
     data: function() {
         return {
-
+            now_post: {},
+            now_group: {},
+            input_author: "",
+            input_content: "",
+            commit_list: []
         };
     },
     methods: {
-
+        get_into_group: function(id) {
+            //vueData.now_group = this.$data.group_list[id];
+            vueMethods.switch_component("group-comp");
+        },
+        get_into_home: function() {
+            vueMethods.switch_component("main-comp");
+        },
+        add_commit: function() {
+            __this = this;
+            $.post('./add_commit', {
+                author: __this.$data.input_author,
+                content: __this.$data.input_content,
+                post_id: __this.$data.now_post._id,
+                group_id: __this.$data.now_group._id
+            }, function(res) {
+                if(res['code'] == 0) {
+                    __this.$data.commit_list.unshift({
+                        _id: res['data'],
+                        author:  __this.$data.input_author,
+                        content: __this.$data.input_content,
+                        group_id: __this.$data.now_group._id,
+                        post_id: __this.$data.now_post._id,
+                        update_time: Date.now(),
+                        create_time: Date.now()
+                    })
+                } else {
+                    alert(res['err_msg']);
+                }
+            });
+        }
     },
     mounted: function() {
-        
+        this.$data.now_post = vueData.now_post;
+        this.$data.now_group = vueData.now_group
     }
 });
 
