@@ -68,59 +68,72 @@
             </div>
         </div>
     
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <a href="#" class="float-right">More</a>
-                        <h4>Sport</h4>
-                    </div>
-                    <div class="list-group list-group-flush">
-                        <button class="list-group-item">Where does Deontay Wilder v Tyson Fury stand in boxing’s pantheon?</button>
-                        <button class="list-group-item">South Africa World Cup winner Naka Drotske shot in attempted robbery</button>
-                        <button class="list-group-item">Where does Deontay Wilder v Tyson Fury stand in boxing’s pantheon?</button>
-                        <button class="list-group-item">South Africa World Cup winner Naka Drotske shot in attempted robbery</button>
-                        <button class="list-group-item">Where does Deontay Wilder v Tyson Fury stand in boxing’s pantheon?</button>
-                        <button class="list-group-item">South Africa World Cup winner Naka Drotske shot in attempted robbery</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <a href="#" class="float-right">More</a>
-                        <h4>Earth</h4>
-                    </div>
-                    <div class="list-group list-group-flush">
-                        <button class="list-group-item">Where does Deontay Wilder v Tyson Fury stand in boxing’s pantheon?</button>
-                        <button class="list-group-item">South Africa World Cup winner Naka Drotske shot in attempted robbery</button>
-                        <button class="list-group-item">Where does Deontay Wilder v Tyson Fury stand in boxing’s pantheon?</button>
-                        <button class="list-group-item">South Africa World Cup winner Naka Drotske shot in attempted robbery</button>
-                        <button class="list-group-item">Where does Deontay Wilder v Tyson Fury stand in boxing’s pantheon?</button>
-                        <button class="list-group-item">South Africa World Cup winner Naka Drotske shot in attempted robbery</button>
+        
+        <div v-for="(item, index) in group_list">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <a href="#" class="float-right" @click="get_into_group(index)">More</a>
+                            <h4>{{item.topic}}</h4>
+                        </div>
+                        <div class="list-group list-group-flush">
+                            <button class="list-group-item">Where does Deontay Wilder v Tyson Fury stand in boxing’s pantheon?</button>
+                            <button class="list-group-item">South Africa World Cup winner Naka Drotske shot in attempted robbery</button>
+                            <button class="list-group-item">Where does Deontay Wilder v Tyson Fury stand in boxing’s pantheon?</button>
+                            <button class="list-group-item">South Africa World Cup winner Naka Drotske shot in attempted robbery</button>
+                            <button class="list-group-item">Where does Deontay Wilder v Tyson Fury stand in boxing’s pantheon?</button>
+                            <button class="list-group-item">South Africa World Cup winner Naka Drotske shot in attempted robbery</button>
+                        </div>
                     </div>
                 </div>
             </div>
+            <br>
         </div>
     </div>
 </template>
 
 <template id="group-temp">
     <div>
-        <button class="btn btn-dark rounded-circle my-add"><img src="./add.png" class="img-fluid" alt="" srcset=""></button>
+        <button class="btn btn-dark rounded-circle my-add" data-toggle="modal" data-target="#add-post"><img src="./add.png" class="img-fluid" alt="" srcset=""></button>
+        <div class="modal fade" id="add-post">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add Group</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="topic">Topic:</label>
+                            <input type="text" id="topic" placeholder="Enter topic" class="form-control" v-model="input_topic">
+                        </div>
+                        <div class="form-group">
+                            <label for="summary">Summary:</label>
+                            <textarea name="" id="summary" cols="30" rows="10" class="form-control" placeholder="Add Group Summary ...." v-model="input_summary"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="add_group"> Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <ol class="breadcrumb col-12">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="#" @click="get_into_home">Home</a></li>
                 <li class="breadcrumb-item active">Sport</li>
             </ol>
         </div>
         <div class="row">
             <div class="jumbotron col-12">
-                <h2>Sport</h2> 
-                <p>Sport (British English) or sports (American English) includes all forms of competitive physical activity or games which, through casual or organised participation, aim to use, maintain or improve physical ability and skills while providing enjoyment to participants, and in some cases, entertainment for spectators.</p> 
+                <h2>{{topic}}</h2> 
+                <p>{{summary}}</p>
             </div>
         </div>
 
