@@ -107,7 +107,7 @@ Vue.component('group-comp', {
                     __this.$data.post_list.unshift({
                         title: __this.$data.input_title,
                         author: __this.$data.input_author,
-                        content: (new Base64).encode(this.$data.input_content),
+                        content: (new Base64).encode(__this.$data.input_content),
                         commit_number: 0,
                         group_id: vueData.now_group._id,
                         update_time: Date.now(),
